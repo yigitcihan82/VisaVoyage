@@ -2,13 +2,12 @@ package model.transport;
 
 public class TrainOption extends TransportOption {
 
-    public TrainOption(double basePrice) {
-        super(basePrice);
+    public TrainOption(String from, String to, double basePrice) {
+        super(from, to, basePrice);
     }
 
     @Override
     public double calculateCost() {
-        // Tren: Sabit fiyat (İstersen buraya öğrenci indirimi vs eklersin)
         return basePrice;
     }
 }

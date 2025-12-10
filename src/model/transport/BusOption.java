@@ -2,13 +2,12 @@ package model.transport;
 
 public class BusOption extends TransportOption {
 
-    public BusOption(double basePrice) {
-        super(basePrice);
+    public BusOption(String from, String to, double basePrice) {
+        super(from, to, basePrice);
     }
 
     @Override
     public double calculateCost() {
-        // Otobüs: Sabit fiyat
         return basePrice;
     }
 }

@@ -7,7 +7,7 @@ public class BusOption extends TransportOption {
     }
 
     @Override
-    public double calculateCost() {
+    public double calculateTotalCost() {
         return basePrice;
     }
 }

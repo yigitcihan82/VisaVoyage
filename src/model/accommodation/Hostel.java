@@ -7,7 +7,7 @@ public class Hostel extends Accommodation {
     }
 
     @Override
-    public double calculateCost() {
+    public double calculatePrice() {
         // Hostel: Direkt (Gün * Gecelik)
         return nightlyRate * days;
     }

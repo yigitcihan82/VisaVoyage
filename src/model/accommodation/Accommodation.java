@@ -10,5 +10,5 @@ public abstract class Accommodation {
     }
 
     // Listede istediğin calculate metodu
-    public abstract double calculateCost();
+    public abstract double calculatePrice();
 }

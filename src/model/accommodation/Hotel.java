@@ -9,7 +9,7 @@ public class Hotel extends Accommodation {
     }
 
     @Override
-    public double calculateCost() {
+    public double calculatePrice() {
         // Otel: (Gün * Gecelik) + Servis ücreti
         return (nightlyRate * days) + serviceFee;
     }

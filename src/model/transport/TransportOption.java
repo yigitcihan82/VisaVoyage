@@ -13,7 +13,7 @@ public abstract class TransportOption {
     }
 
     // Alt sınıflar bunu kendine göre dolduracak
-    public abstract double calculateCost();
+    public abstract double calculateTotalCost();
 
     // A Kişisinin ihtiyaç duyduğu metot
     public String getRouteInfo() {

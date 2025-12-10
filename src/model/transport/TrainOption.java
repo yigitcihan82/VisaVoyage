@@ -7,7 +7,7 @@ public class TrainOption extends TransportOption {
     }
 
     @Override
-    public double calculateCost() {
+    public double calculateTotalCost() {
         return basePrice;
     }
 }

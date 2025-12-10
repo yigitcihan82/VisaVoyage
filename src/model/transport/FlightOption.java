@@ -12,7 +12,7 @@ public class FlightOption extends TransportOption {
     }
 
     @Override
-    public double calculateCost() {
+    public double calculateTotalCost() {
         return basePrice + baggageFee + tax;
     }
 }

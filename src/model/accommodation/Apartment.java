@@ -9,7 +9,7 @@ public class Apartment extends Accommodation {
     }
 
     @Override
-    public double calculateCost() {
+    public double calculatePrice() {
         // Apart: (Gün * Gecelik) + Temizlik ücreti
         return (nightlyRate * days) + cleaningFee;
     }

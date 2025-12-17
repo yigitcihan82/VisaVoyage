@@ -34,10 +34,12 @@ public class ConsoleMenu {
         VisaService visaService = new VisaService();
         RecommendationService recService = new RecommendationService();
 
+
         // 3. Menü Komutlarının Tanımlanması
         registerCommand(1, "Otomatik Gezi Planla (Trip & Budget)", new CreateTripCommand(tripService, user));
         registerCommand(2, "Vize Başvuru Simülasyonu (Exception Test)", new PlanVisaCommand(visaService));
         registerCommand(3, "Gezilerimi ve Bütçeyi Görüntüle", new ShowBudgetCommand(user));
+        registerCommand(4, "Bütçeme Göre Seyahat Öner (Dünya Turu)", new RecommendTripCommand(user));
 
         // Açılışta küçük bir karşılama önerisi
         System.out.println("Hoşgeldiniz " + profile.getFullName() + "!");

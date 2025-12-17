@@ -11,7 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ConsoleMenu {
-    // LinkedHashMap kullanarak ekleme sırasını koruyoruz
+    // LinkedHashMap kullanarak ekleme sırasını bhvhvııb
     private Map<Integer, Command> commands;
     private Map<Integer, String> menuLabels;
 

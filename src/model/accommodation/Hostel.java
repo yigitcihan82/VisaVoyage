@@ -14,3 +14,4 @@ public class Hostel extends Accommodation {
         return nightlyRate * days;
     }
 }
+//xdvndxklvsndklnsdlk

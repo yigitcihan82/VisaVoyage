@@ -9,6 +9,12 @@ public abstract class Accommodation {
         this.days = days;
     }
 
-    // Listede istediğin calculate metodu
+    // Alt sınıflar (Hotel, Apartment, Hostel) bu metodu kendi kurgusuna göre dolduracak
     public abstract double calculatePrice();
+
+    // EKLEMEN GEREKEN METOT:
+    // Sistem tarafından rastgele belirlenen gecelik ücreti dışarıdan okumamızı sağlar.
+    public double getNightlyRate() {
+        return nightlyRate;
+    }
 }

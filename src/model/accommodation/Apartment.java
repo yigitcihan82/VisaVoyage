@@ -1,16 +1,22 @@
 package model.accommodation;
 
-public class Apartment extends Accommodation {
-    private double cleaningFee; // Temizlik ücreti
+import java.util.concurrent.ThreadLocalRandom;
 
-    public Apartment(double nightlyRate, int days, double cleaningFee) {
-        super(nightlyRate, days);
-        this.cleaningFee = cleaningFee;
+public class Apartment extends Accommodation {
+    private double cleaningFee; // Temizlik ücreti otomatik atanacak
+
+    public Apartment(int days) {
+        // 2000 TL ile 7000 TL arası rastgele gecelik ücret
+        super(ThreadLocalRandom.current().nextDouble(2000, 7001), days);
+        this.cleaningFee = 300.0; // Otomatik temizlik ücreti
     }
 
     @Override
     public double calculatePrice() {
-        // Apart: (Gün * Gecelik) + Temizlik ücreti
         return (nightlyRate * days) + cleaningFee;
+    }
+
+    public double getCleaningFee() {
+        return cleaningFee;
     }
 }

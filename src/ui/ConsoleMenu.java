@@ -81,4 +81,3 @@ public class ConsoleMenu {
         new ConsoleMenu().start();
     }
 }
-

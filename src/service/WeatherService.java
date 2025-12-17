@@ -43,3 +43,4 @@ public class WeatherService {
                 "\nAsistan Tavsiyesi: " + advice;
     }
 }
+//SDVNSKDJPSVJPSDVJPSJVSPD

@@ -5,38 +5,64 @@ import model.visa.Document;
 import model.visa.DocumentType;
 import model.visa.VisaApplication;
 import service.VisaService;
-import java.util.Scanner;
 
 public class PlanVisaCommand implements Command {
     private VisaService visaService;
-    private Scanner scanner;
 
     public PlanVisaCommand(VisaService visaService) {
         this.visaService = visaService;
-        this.scanner = new Scanner(System.in);
     }
 
     @Override
     public void execute() {
-        System.out.print("Hangi ülke kodu? (US / FR): ");
-        String country = scanner.next();
+        InputHelper.printSeparator();
+        System.out.println("       VİZE BAŞVURU SİMÜLASYONU");
+        InputHelper.printSeparator();
 
-        VisaApplication app = visaService.createApplication(country, "Örnek Kullanıcı");
+        String country = InputHelper.readString("Başvuru yapılacak ülke kodu (US / FR / DE)");
+        String name = InputHelper.readString("Başvuru sahibinin adı");
 
-        if (app != null) {
-            try {
-                System.out.println("Vize başvurusu oluşturuldu. Evraklar kontrol ediliyor...");
-                // Kasıtlı olarak evrak eklemiyoruz ki hatayı görelim (veya test için ekleyebilirsin)
+        VisaApplication app = visaService.createApplication(country, name);
 
-                // app.addDocument(new Document(DocumentType.PASSPORT, "TR123")); // Bunu açarsan hata azalır
+        if (app == null) {
+            return; // Desteklenmeyen ülke
+        }
 
-                app.validateDocuments(); // C Kişisinin yazdığı metod
+        System.out.println("\n>> Başvuru taslağı oluşturuldu: " + app.exportToText());
+        System.out.println(">> Şimdi evrakları kontrol edeceğiz.\n");
 
-                System.out.println("Tebrikler! Evraklar tam.");
-            } catch (MissingDocumentException e) {
-                System.err.println("VİZE HATASI: " + e.getMessage());
-                System.out.println("Lütfen eksik evrakları tamamlayıp tekrar deneyin.");
+        // İnteraktif Belge Ekleme
+        boolean addPassport = InputHelper.readString("Pasaport belgesini sisteme yükleyelim mi? (E/H)").equalsIgnoreCase("E");
+        if (addPassport) {
+            app.addDocument(new Document(DocumentType.PASSPORT, "TR-U12345"));
+            System.out.println("+ Pasaport eklendi.");
+        }
+
+        boolean addForm = false;
+        if (country.equalsIgnoreCase("US")) {
+            addForm = InputHelper.readString("DS-160 Formunu yükleyelim mi? (E/H)").equalsIgnoreCase("E");
+            if (addForm) {
+                app.addDocument(new Document(DocumentType.DS160_FORM, "Form-X"));
+                System.out.println("+ DS-160 Formu eklendi.");
             }
+        } else {
+            // Schengen için sigorta soralım
+            boolean addInsurance = InputHelper.readString("Seyahat Sigortasını yükleyelim mi? (E/H)").equalsIgnoreCase("E");
+            if (addInsurance) {
+                app.addDocument(new Document(DocumentType.INSURANCE, "Allianz Sigorta"));
+                System.out.println("+ Sigorta eklendi.");
+            }
+        }
+
+        InputHelper.printSeparator();
+        System.out.println("SONUÇ:");
+
+        try {
+            app.validateDocuments(); // Exception ihtimali olan yer
+            System.out.println("✅ TEBRİKLER! Başvurunuz eksiksiz ve onaya hazır.");
+        } catch (MissingDocumentException e) {
+            System.err.println("❌ VİZE REDDİ: " + e.getMessage());
+            System.out.println("   (İpucu: Belgeleri eksik yüklediğiniz için bu hatayı aldınız.)");
         }
     }
 }

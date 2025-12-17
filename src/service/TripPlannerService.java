@@ -1,14 +1,10 @@
 package service;
 
 import exception.BudgetExceededException;
+import model.accommodation.Accommodation;
 import model.finance.Budget;
-import model.finance.Currency;
-import model.finance.Expense;
-import model.finance.ExpenseType;
-import model.transport.FlightOption;
-import model.trip.Trip;
-import model.trip.ItineraryDay;
-import model.trip.TransportActivity;
+import model.transport.TransportOption;
+import model.trip.*;
 import model.user.User;
 
 import java.time.LocalDate;
@@ -16,42 +12,56 @@ import java.time.LocalDateTime;
 
 public class TripPlannerService {
 
-    // Demo amaçlı hızlıca bir gezi planı oluşturur
+    // ESKİ DEMO METODU (İstersen durabilir, istersen silebilirsin)
     public void createDemoTrip(User user, double budgetLimit) {
-        try {
-            System.out.println("Otomatik gezi planlanıyor...");
+        // ... Eski kodlar ...
+    }
 
-            // 1. Bütçe Oluştur (B Kişisi)
+    // --- YENİ EKLENEN ESNEK METOT ---
+    public void planCustomTrip(User user, String tripName, double budgetLimit,
+                               TransportOption transportOption, Accommodation accommodation) {
+        try {
+            System.out.println(">> Özel gezi planı oluşturuluyor...");
+
+            // 1. Bütçe Kurulumu
             Budget budget = new Budget(budgetLimit);
 
-            // 2. Trip Oluştur (A Kişisi)
-            LocalDateTime start = LocalDateTime.now().plusDays(10);
-            LocalDateTime end = start.plusDays(5);
-            Trip trip = new Trip("Avrupa Turu", start, end, budget);
+            // 2. Tarih Ayarları (Basitlik olsun diye bugünden başlatıyoruz)
+            LocalDateTime start = LocalDateTime.now().plusDays(5);
+            LocalDateTime end = start.plusDays(7); // 1 haftalık tatil
 
-            // 3. Ulaşım Ekle (B'nin FlightOption'ı, A'nın Activity'si içinde)
-            // Not: TransportOption constructor güncellemene uygun olarak (From, To, Fiyat, Bagaj, Vergi)
-            FlightOption flight = new FlightOption("Istanbul", "Paris", 15000, 500, 200);
-            TransportActivity flightActivity = new TransportActivity(start, flight);
+            Trip trip = new Trip(tripName, start, end, budget);
 
-            // Harcamayı Bütçeye İşle (B Kişisi - Overload kullanımı)
-            budget.addExpense(flightActivity.calculateCost(), "Uçak Bileti");
+            // 3. Ulaşım Aktivitesini Ekle
+            TransportActivity transportActivity = new TransportActivity(start, transportOption);
+            // Harcamayı bütçeye yansıt
+            budget.addExpense(transportActivity.calculateCost(), "Ulaşım: " + transportOption.getRouteInfo());
 
-            // 4. Günlük Plan (Itinerary) Ekle
+            // 4. Konaklama Aktivitesini Ekle
+            // Not: Konaklama tüm gezi boyunca sürer
+            AccommodationActivity hotelActivity = new AccommodationActivity(start, end, accommodation);
+            // Harcamayı bütçeye yansıt
+            budget.addExpense(hotelActivity.calculateCost(), "Konaklama Ücreti");
+
+            // 5. Günlük Plana İşle (Basitçe ilk güne ekliyoruz)
             ItineraryDay day1 = new ItineraryDay(LocalDate.from(start));
-            day1.addActivity(flightActivity); // Aktiviteyi güne ekle
+            day1.addActivity(transportActivity);
+            day1.addActivity(hotelActivity);
+
             trip.addItineraryDay(day1);
 
-            // 5. Trip'i User'a ekle
+            // 6. Kullanıcıya Kaydet
             user.addTrip(trip);
 
-            System.out.println("Gezi başarıyla oluşturuldu: " + trip.exportToText());
+            System.out.println("✅ Gezi başarıyla kaydedildi!");
+            System.out.println("Kalan Bütçe: " + budget.getRemainingBudget() + " TL");
 
         } catch (BudgetExceededException e) {
-            // C Kişisinin yazdığı Exception'ı burada yakalıyoruz
-            System.err.println("HATA: Bütçe yetersiz! " + e.getMessage());
+            System.err.println("❌ HATA: Bütçe yetersiz kaldı! İşlem iptal edildi.");
+            System.err.println("   Detay: " + e.getMessage());
         } catch (Exception e) {
             System.out.println("Beklenmedik bir hata: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }

@@ -7,67 +7,78 @@ import service.RecommendationService;
 import service.TripPlannerService;
 import service.VisaService;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Scanner;
 
 public class ConsoleMenu {
+    // LinkedHashMap kullanarak ekleme sırasını koruyoruz
     private Map<Integer, Command> commands;
-    private Scanner scanner;
+    private Map<Integer, String> menuLabels;
 
     public ConsoleMenu() {
-        this.scanner = new Scanner(System.in);
-        this.commands = new HashMap<>();
+        this.commands = new LinkedHashMap<>();
+        this.menuLabels = new LinkedHashMap<>();
 
-        // --- BAŞLANGIÇ KURULUMLARI ---
+        initializeEnvironment();
+    }
 
-        // 1. Örnek Kullanıcı Yarat (A Kişisi)
-        Profile profile = new Profile("Ali Veli", "ali@test.com");
+    private void initializeEnvironment() {
+        // 1. Ortam ve Kullanıcı Hazırlığı
+        Profile profile = new Profile("Ahmet Yılmaz", "ahmet@ornek.com");
         User user = new User(profile);
-        user.getPreferences().add(new Preference("Tarih")); // İlgi alanı ekle
+        user.getPreferences().add(new Preference("Tarih"));
+        user.getPreferences().add(new Preference("Doğa"));
 
-        // 2. Servisleri Başlat (D Kişisi)
+        // 2. Servislerin Başlatılması
         TripPlannerService tripService = new TripPlannerService();
         VisaService visaService = new VisaService();
         RecommendationService recService = new RecommendationService();
 
-        // 3. Komutları Eşleştir (Command Pattern)
-        commands.put(1, new CreateTripCommand(tripService, user));
-        commands.put(2, new PlanVisaCommand(visaService));
-        commands.put(3, new ShowBudgetCommand(user));
+        // 3. Menü Komutlarının Tanımlanması
+        registerCommand(1, "Otomatik Gezi Planla (Trip & Budget)", new CreateTripCommand(tripService, user));
+        registerCommand(2, "Vize Başvuru Simülasyonu (Exception Test)", new PlanVisaCommand(visaService));
+        registerCommand(3, "Gezilerimi ve Bütçeyi Görüntüle", new ShowBudgetCommand(user));
 
-        // Başlangıçta bir öneri yapalım
-        recService.suggestDestination(user, 40000);
+        // Açılışta küçük bir karşılama önerisi
+        System.out.println("Hoşgeldiniz " + profile.getFullName() + "!");
+        recService.suggestDestination(user, 45000);
+    }
+
+    private void registerCommand(int key, String label, Command command) {
+        commands.put(key, command);
+        menuLabels.put(key, label);
     }
 
     public void start() {
-        System.out.println("\n=== SEYAHAT PLANLAYICI ===");
         while (true) {
-            System.out.println("\n1. Yeni Gezi Planla (Trip & Budget)");
-            System.out.println("2. Vize Başvurusu Yap (Exception Test)");
-            System.out.println("3. Bütçe ve Gezi Durumunu Göster");
-            System.out.println("0. Çıkış");
-            System.out.print("Seçiminiz: ");
+            System.out.println("\n==========================================");
+            System.out.println("          SEYAHAT PLANLAYICI v2.0         ");
+            System.out.println("==========================================");
 
-            int choice = scanner.nextInt();
+            // Menü seçeneklerini yazdır
+            for (Map.Entry<Integer, String> entry : menuLabels.entrySet()) {
+                System.out.println(entry.getKey() + ". " + entry.getValue());
+            }
+            System.out.println("0. Çıkış");
+
+            int choice = InputHelper.readInt("Seçiminiz");
 
             if (choice == 0) {
-                System.out.println("Güle güle!");
+                System.out.println("Çıkış yapılıyor... İyi günler!");
                 break;
             }
 
             Command command = commands.get(choice);
             if (command != null) {
-                command.execute(); // Polimorfik Çağrı
+                command.execute(); // Polimorfizm
             } else {
-                System.out.println("Geçersiz seçim!");
+                System.out.println(">> Geçersiz seçim, lütfen tekrar deneyin.");
             }
         }
     }
 
     public static void main(String[] args) {
-        // Uygulamayı başlat
-        ConsoleMenu app = new ConsoleMenu();
-        app.start();
+        new ConsoleMenu().start();
     }
 }
+

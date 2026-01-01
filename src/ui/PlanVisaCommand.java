@@ -16,53 +16,50 @@ public class PlanVisaCommand implements Command {
     @Override
     public void execute() {
         InputHelper.printSeparator();
-        System.out.println("       VİZE BAŞVURU SİMÜLASYONU");
+        System.out.println("       VISA APPLICATION SIMULATION");
         InputHelper.printSeparator();
 
-        String country = InputHelper.readString("Başvuru yapılacak ülke kodu (US / FR / DE)");
-        String name = InputHelper.readString("Başvuru sahibinin adı");
+        String country = InputHelper.readString("Country code for application (US / FR / DE)");
+        String name = InputHelper.readString("Applicant name");
 
         VisaApplication app = visaService.createApplication(country, name);
 
         if (app == null) {
-            return; // Desteklenmeyen ülke
+            return;
         }
 
-        System.out.println("\n>> Başvuru taslağı oluşturuldu: " + app.exportToText());
-        System.out.println(">> Şimdi evrakları kontrol edeceğiz.\n");
+        System.out.println("\n>> Application draft created: " + app.exportToText());
+        System.out.println(">> Now we will check the documents.\n");
 
-        // İnteraktif Belge Ekleme
-        boolean addPassport = InputHelper.readString("Pasaport belgesini sisteme yükleyelim mi? (E/H)").equalsIgnoreCase("E");
+        boolean addPassport = InputHelper.readString("Upload passport document to the system? (Y/N)").equalsIgnoreCase("Y");
         if (addPassport) {
             app.addDocument(new Document(DocumentType.PASSPORT, "TR-U12345"));
-            System.out.println("+ Pasaport eklendi.");
+            System.out.println("+ Passport added.");
         }
 
-        boolean addForm = false;
         if (country.equalsIgnoreCase("US")) {
-            addForm = InputHelper.readString("DS-160 Formunu yükleyelim mi? (E/H)").equalsIgnoreCase("E");
+            boolean addForm = InputHelper.readString("Upload DS-160 Form? (Y/N)").equalsIgnoreCase("Y");
             if (addForm) {
                 app.addDocument(new Document(DocumentType.DS160_FORM, "Form-X"));
-                System.out.println("+ DS-160 Formu eklendi.");
+                System.out.println("+ DS-160 Form added.");
             }
         } else {
-            // Schengen için sigorta soralım
-            boolean addInsurance = InputHelper.readString("Seyahat Sigortasını yükleyelim mi? (E/H)").equalsIgnoreCase("E");
+            boolean addInsurance = InputHelper.readString("Upload Travel Insurance? (Y/N)").equalsIgnoreCase("Y");
             if (addInsurance) {
-                app.addDocument(new Document(DocumentType.INSURANCE, "Allianz Sigorta"));
-                System.out.println("+ Sigorta eklendi.");
+                app.addDocument(new Document(DocumentType.INSURANCE, "Allianz Insurance"));
+                System.out.println("+ Insurance added.");
             }
         }
 
         InputHelper.printSeparator();
-        System.out.println("SONUÇ:");
+        System.out.println("RESULT:");
 
         try {
-            app.validateDocuments(); // Exception ihtimali olan yer
-            System.out.println("✅ TEBRİKLER! Başvurunuz eksiksiz ve onaya hazır.");
+            app.validateDocuments();
+            System.out.println("✅ CONGRATULATIONS! Your application is complete and ready for approval.");
         } catch (MissingDocumentException e) {
-            System.err.println("❌ VİZE REDDİ: " + e.getMessage());
-            System.out.println("   (İpucu: Belgeleri eksik yüklediğiniz için bu hatayı aldınız.)");
+            System.err.println("❌ VISA REJECTION: " + e.getMessage());
+            System.out.println("   (Tip: You received this error because documents were missing.)");
         }
     }
 }

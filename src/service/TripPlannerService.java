@@ -3,6 +3,7 @@ package service;
 import exception.BudgetExceededException;
 import model.accommodation.Accommodation;
 import model.finance.Budget;
+import model.location.Attraction;
 import model.transport.TransportOption;
 import model.trip.*;
 import model.user.User;
@@ -12,56 +13,60 @@ import java.time.LocalDateTime;
 
 public class TripPlannerService {
 
-    // ESKİ DEMO METODU (İstersen durabilir, istersen silebilirsin)
-    public void createDemoTrip(User user, double budgetLimit) {
-        // ... Eski kodlar ...
-    }
-
-    // --- YENİ EKLENEN ESNEK METOT ---
     public void planCustomTrip(User user, String tripName, double budgetLimit,
                                TransportOption transportOption, Accommodation accommodation) {
         try {
-            System.out.println(">> Özel gezi planı oluşturuluyor...");
-
-            // 1. Bütçe Kurulumu
+            System.out.println(">> Creating custom trip plan...");
             Budget budget = new Budget(budgetLimit);
-
-            // 2. Tarih Ayarları (Basitlik olsun diye bugünden başlatıyoruz)
             LocalDateTime start = LocalDateTime.now().plusDays(5);
-            LocalDateTime end = start.plusDays(7); // 1 haftalık tatil
+            LocalDateTime end = start.plusDays(7);
 
             Trip trip = new Trip(tripName, start, end, budget);
 
-            // 3. Ulaşım Aktivitesini Ekle
+            // Transport
             TransportActivity transportActivity = new TransportActivity(start, transportOption);
-            // Harcamayı bütçeye yansıt
-            budget.addExpense(transportActivity.calculateCost(), "Ulaşım: " + transportOption.getRouteInfo());
+            budget.addExpense(transportActivity.calculateCost(), "Transport: " + transportOption.getRouteInfo());
 
-            // 4. Konaklama Aktivitesini Ekle
-            // Not: Konaklama tüm gezi boyunca sürer
+            // Accommodation
             AccommodationActivity hotelActivity = new AccommodationActivity(start, end, accommodation);
-            // Harcamayı bütçeye yansıt
-            budget.addExpense(hotelActivity.calculateCost(), "Konaklama Ücreti");
+            budget.addExpense(hotelActivity.calculateCost(), "Accommodation");
 
-            // 5. Günlük Plana İşle (Basitçe ilk güne ekliyoruz)
+            // Daily Plan
             ItineraryDay day1 = new ItineraryDay(LocalDate.from(start));
             day1.addActivity(transportActivity);
             day1.addActivity(hotelActivity);
-
             trip.addItineraryDay(day1);
 
-            // 6. Kullanıcıya Kaydet
             user.addTrip(trip);
-
-            System.out.println("✅ Gezi başarıyla kaydedildi!");
-            System.out.println("Kalan Bütçe: " + budget.getRemainingBudget() + " TL");
+            System.out.println("✅ Trip saved. Remaining: " + budget.getRemainingBudget() + " TL");
 
         } catch (BudgetExceededException e) {
-            System.err.println("❌ HATA: Bütçe yetersiz kaldı! İşlem iptal edildi.");
-            System.err.println("   Detay: " + e.getMessage());
-        } catch (Exception e) {
-            System.out.println("Beklenmedik bir hata: " + e.getMessage());
-            e.printStackTrace();
+            System.err.println("❌ Error: " + e.getMessage());
+        }
+    }
+
+    public void addSightseeingToTrip(Trip trip, Attraction attraction, LocalDateTime startTime, int durationHours) {
+        try {
+            SightseeingActivity activity = new SightseeingActivity(startTime, durationHours, attraction);
+
+            // Bu satır Trip sınıfındaki getBudget() metoduna ihtiyaç duyar:
+            trip.getBudget().addExpense(activity.calculateCost(), "Visit: " + attraction.getName());
+
+            // Doğru günü bul veya oluştur
+            LocalDate date = startTime.toLocalDate();
+            ItineraryDay targetDay = trip.getItineraryDays().stream()
+                    .filter(d -> d.getDate().equals(date))
+                    .findFirst()
+                    .orElseGet(() -> {
+                        ItineraryDay newDay = new ItineraryDay(date);
+                        trip.addItineraryDay(newDay);
+                        return newDay;
+                    });
+
+            targetDay.addActivity(activity);
+            System.out.println("✅ Activity added to " + date);
+        } catch (BudgetExceededException e) {
+            System.err.println("❌ Budget Exceeded for " + attraction.getName());
         }
     }
 }

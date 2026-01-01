@@ -20,4 +20,3 @@ public class Apartment extends Accommodation {
         return cleaningFee;
     }
 }
-//dvmkdnskdnskvdm

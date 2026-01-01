@@ -13,7 +13,7 @@ public class VisaService {
         } else if (countryCode.equalsIgnoreCase("US")) {
             return new UsVisaApplication(applicantName);
         } else {
-            System.out.println("Bu ülke için otomatik vize sistemi henüz yok.");
+            System.out.println("There is no automatic visa system for this country yet.");
             return null;
         }
     }

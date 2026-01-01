@@ -13,7 +13,7 @@ public class AccommodationActivity extends Activity {
 
     @Override
     public double calculateCost() {
-        // B Kişisinin yazdığı hesaplama
-        return accommodation.calculatePrice(); // veya calculateCost() isimlendirmeye dikkat
+
+        return accommodation.calculatePrice();
     }
 }

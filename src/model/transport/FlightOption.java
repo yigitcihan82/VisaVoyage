@@ -6,11 +6,11 @@ public class FlightOption extends TransportOption {
     private double tax;
 
     public FlightOption(String from, String to) {
-        // 2000 - 5000 arası rastgele fiyat
+        // random price between 2000 - 5000
         super(from, to, ThreadLocalRandom.current().nextDouble(2000, 5001));
         this.tax = this.basePrice * 0.18; // %18 KDV gibi düşünebilirsin
     }
-//sdmskdgjspspg
+
     @Override
     public double calculateTotalCost() {
         double total = basePrice + baggageFee + tax;

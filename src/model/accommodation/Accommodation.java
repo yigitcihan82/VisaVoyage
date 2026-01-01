@@ -18,4 +18,3 @@ public abstract class Accommodation {
         return nightlyRate;
     }
 }
-//sdnsdklnskdgnsk

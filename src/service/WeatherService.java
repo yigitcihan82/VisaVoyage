@@ -9,38 +9,37 @@ public class WeatherService {
         String condition;
         String advice;
 
-        // Senin belirlediğin kategorilere göre hava durumu ataması
+        // Weather assignment based on the categories you defined
         switch (category.toUpperCase()) {
             case "ELIT":
                 temperature = ThreadLocalRandom.current().nextInt(30, 40);
-                condition = "Güneşli ve Çok Sıcak ☀️";
-                advice = "Güneş kremi ve ince kıyafetler almayı unutmayın!";
+                condition = "Sunny and Very Hot ☀️";
+                advice = "Don't forget to pack sunscreen and light clothing!";
                 break;
             case "KULTUR":
                 temperature = ThreadLocalRandom.current().nextInt(15, 22);
-                condition = "Parçalı Bulutlu ve Ilıman ☁️";
-                advice = "Şehir turu için ideal bir hava, hafif bir ceket yeterli.";
+                condition = "Partly Cloudy and Mild ☁️";
+                advice = "Ideal weather for a city tour, a light jacket will suffice.";
                 break;
             case "TROPIKAL":
                 temperature = ThreadLocalRandom.current().nextInt(28, 35);
-                condition = "Sıcak ama Muson Yağmurlu 🌧️🌡️";
-                advice = "Hava sıcak ama her an yağmur yağabilir, yanınızda hafif bir yağmurluk bulundurun.";
+                condition = "Hot but Monsoon Rainy 🌧️🌡️";
+                advice = "It's hot but it could rain at any moment, keep a light raincoat with you.";
                 break;
             case "EKONOMIK":
                 temperature = ThreadLocalRandom.current().nextInt(-5, 10);
-                condition = "Oldukça Soğuk ve Rüzgarlı ❄️";
-                advice = "Sıkı giyinin, atkı ve bereyi unutmayın!";
+                condition = "Quite Cold and Windy ❄️";
+                advice = "Dress warmly, don't forget your scarf and beanie!";
                 break;
             default:
                 temperature = 20;
-                condition = "Güneşli";
-                advice = "Keyifli yolculuklar!";
+                condition = "Sunny";
+                advice = "Have a pleasant journey!";
         }
 
-        return "\n--- BÖLGESEL HAVA DURUMU ---" +
-                "\nTahmini Sıcaklık: " + temperature + "°C" +
-                "\nHava Durumu: " + condition +
-                "\nAsistan Tavsiyesi: " + advice;
+        return "\n--- REGIONAL WEATHER ---" +
+                "\nEstimated Temperature: " + temperature + "°C" +
+                "\nCondition: " + condition +
+                "\nAssistant Advice: " + advice;
     }
 }
-//SDVNSKDJPSVJPSDVJPSJVSPD

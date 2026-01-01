@@ -8,13 +8,13 @@ public class TransportActivity extends Activity {
 
     // Bitiş saati tahmini: Başlangıç + 2 saat (Örnek)
     public TransportActivity(LocalDateTime start, TransportOption transportOption) {
-        super("Ulaşım: " + transportOption.getRouteInfo(), start, start.plusHours(2));
+        super("Transportation: " + transportOption.getRouteInfo(), start, start.plusHours(2));
         this.transportOption = transportOption;
     }
 
     @Override
     public double calculateCost() {
-        // B Kişisinin yazdığı hesaplama metodunu çağırır
+
         return transportOption.calculateTotalCost();
     }
 }

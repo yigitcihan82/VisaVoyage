@@ -19,6 +19,5 @@ public abstract class Activity implements Schedulable {
     @Override
     public LocalDateTime getEndTime() { return endTime; }
 
-    // Alt sınıflar maliyeti hesaplamak ZORUNDA
     public abstract double calculateCost();
 }

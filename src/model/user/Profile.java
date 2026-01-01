@@ -9,5 +9,4 @@ public class Profile {
         this.email = email;
     }
 
-    public String getFullName() { return fullName; }
 }

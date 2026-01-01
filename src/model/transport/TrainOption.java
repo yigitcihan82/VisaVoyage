@@ -3,7 +3,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class TrainOption extends TransportOption {
     public TrainOption(String from, String to) {
-        // 500 - 1000 arası rastgele fiyat
+        //  price between 500 - 1000
         super(from, to, ThreadLocalRandom.current().nextDouble(500, 1001));
     }
 
@@ -12,4 +12,3 @@ public class TrainOption extends TransportOption {
         return Math.round(basePrice * 100.0) / 100.0;
     }
 }
-//sdmlsmdgslmgplsgmpldsm

@@ -12,8 +12,11 @@ public class Attraction {
     }
 
     public String getName() { return name; }
+    public String getDescription() { return description; }
     public double getEntryFee() { return entryFee; }
 
     @Override
-    public String toString() { return name; }
+    public String toString() {
+        return name + " (" + description + ")";
+    }
 }

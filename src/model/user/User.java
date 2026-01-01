@@ -6,12 +6,12 @@ import java.util.List;
 
 public class User {
     private Profile profile;
-    private List<Preference> preferences; // Liste burada var
+    private List<Preference> preferences;
     private List<Trip> trips;
 
     public User(Profile profile) {
         this.profile = profile;
-        this.preferences = new ArrayList<>(); // Burada başlatılıyor
+        this.preferences = new ArrayList<>();
         this.trips = new ArrayList<>();
     }
 
@@ -27,7 +27,6 @@ public class User {
         return profile;
     }
 
-    // --- EKSİK OLAN METOT BUYDU, BUNU EKLE ---
     public List<Preference> getPreferences() {
         return preferences;
     }

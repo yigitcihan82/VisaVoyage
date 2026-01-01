@@ -1,7 +1,7 @@
 package model.user;
 
 public class Preference {
-    private String tag; // Örn: "History", "Nature", "Nightlife"
+    private String tag;
 
     public Preference(String tag) {
         this.tag = tag;

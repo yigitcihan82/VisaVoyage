@@ -49,7 +49,8 @@ public class TripPlannerService {
         try {
             SightseeingActivity activity = new SightseeingActivity(startTime, durationHours, attraction);
 
-            // Bu satır Trip sınıfındaki getBudget() metoduna ihtiyaç duyar:
+            // DÜZELTME: Budget.java içindeki addExpense metodu BudgetExceededException fırlattığı için
+            // bu çağrı try-catch bloğu içerisinde yönetilmelidir.
             trip.getBudget().addExpense(activity.calculateCost(), "Visit: " + attraction.getName());
 
             // Doğru günü bul veya oluştur
@@ -66,7 +67,8 @@ public class TripPlannerService {
             targetDay.addActivity(activity);
             System.out.println("✅ Activity added to " + date);
         } catch (BudgetExceededException e) {
-            System.err.println("❌ Budget Exceeded for " + attraction.getName());
+            // Checked exception burada yakalanarak derleme hatası giderildi.
+            System.err.println("❌ Budget Exceeded for " + attraction.getName() + ": " + e.getMessage());
         }
     }
 }

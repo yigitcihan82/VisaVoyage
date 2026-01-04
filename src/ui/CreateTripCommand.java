@@ -54,14 +54,20 @@ public class CreateTripCommand implements Command {
         int days = 7; // Default 1 week
 
         Accommodation accommodation;
+        /**
+         * DÜZELTME: Doğrudan casting (zorunlu dönüştürme) yerine instanceof kontrolü eklendi.
+         * Bu sayede yanlış tip eşleşmelerinde programın çökmesi (ClassCastException) engellendi.
+         */
         switch (accChoice) {
             case 1 -> {
                 accommodation = new Hotel(days);
-                showAccInfo("HOTEL", accommodation.getNightlyRate(), ((Hotel)accommodation).getServiceFee(), accommodation.calculatePrice());
+                double serviceFee = (accommodation instanceof Hotel h) ? h.getServiceFee() : 0;
+                showAccInfo("HOTEL", accommodation.getNightlyRate(), serviceFee, accommodation.calculatePrice());
             }
             case 2 -> {
                 accommodation = new Apartment(days);
-                showAccInfo("APARTMENT", accommodation.getNightlyRate(), ((Apartment)accommodation).getCleaningFee(), accommodation.calculatePrice());
+                double cleaningFee = (accommodation instanceof Apartment a) ? a.getCleaningFee() : 0;
+                showAccInfo("APARTMENT", accommodation.getNightlyRate(), cleaningFee, accommodation.calculatePrice());
             }
             default -> {
                 accommodation = new Hostel(days);
@@ -73,7 +79,7 @@ public class CreateTripCommand implements Command {
         System.out.println("\n>> Finalizing base trip plan...");
         plannerService.planCustomTrip(currentUser, tripName, budget, transportOption, accommodation);
 
-        // --- 4. OPTIONAL: ADD SIGHTSEEING ACTIVITY (INTEGRATION) ---
+        // --- 4. OPTIONAL: ADD SIGHTSEEING ACTIVITY ---
         addOptionalActivities();
 
         InputHelper.printSeparator();
@@ -88,10 +94,8 @@ public class CreateTripCommand implements Command {
 
             Attraction attraction = new Attraction(placeName, description, fee);
 
-            // Get the trip we just added to the user
             if (!currentUser.getTrips().isEmpty()) {
                 Trip lastTrip = currentUser.getTrips().get(currentUser.getTrips().size() - 1);
-                // Add activity for 6 days later, lasting 4 hours
                 plannerService.addSightseeingToTrip(lastTrip, attraction, LocalDateTime.now().plusDays(6), 4);
             }
         }
